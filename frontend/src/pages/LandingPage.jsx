@@ -6,7 +6,7 @@ import { useNavigate } from "react-router-dom";
 export default function LandingPage() {
   const navigate = useNavigate();
   return (
-    <div className="min-h-screen bg-white text-gray-800">
+    <div className="min-h-screen bg-white text-gray-800 w-full">
       {/* Hero Section */}
       <section className="text-center py-16 px-4 md:px-8 bg-gradient-to-r from-indigo-500 to-purple-600 text-white">
         <h1 className="text-4xl md:text-6xl font-bold mb-4">Book Your Haircut Without Waiting</h1>

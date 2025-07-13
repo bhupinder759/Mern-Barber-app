@@ -9,6 +9,7 @@ import {
   NavigationMenuLink,
 } from "@/components/ui/navigation-menu";
 import { DropdownMenu, DropdownMenuTrigger, DropdownMenuContent, DropdownMenuItem } from "@/components/ui/dropdown-menu";
+import axiosInstance from "@/utils/axiosInstance";
 
 export default function Navbar() {
   const { user, role } = useSelector((state) => state.user);
@@ -16,7 +17,8 @@ export default function Navbar() {
   const dispatch = useDispatch();
 
   const handleLogout = () => {
-    dispatch(logout());
+    const response = axiosInstance.post("/api/auth/logout");
+    dispatch(logout(response));
     navigate("/");
   };
 
@@ -34,6 +36,9 @@ export default function Navbar() {
     { label: "Search", link: "/search" }, // Future route
   ];
 
+  const firstLetter = (name) => {
+    return name.split(" ").slice(0).map((word) => word.charAt(0)).join("");
+  }
 
   return (
     <nav className="w-full bg-white shadow-md fixed top-0 left-0 z-50 px-4 py-3 flex items-center justify-between">
@@ -62,7 +67,7 @@ export default function Navbar() {
         {user ? (
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
-              <Button variant="outline">{user.name || "Profile"}</Button>
+              <Button variant="outline" className='rounded-full h-10 w-10 bg-black text-white'>{firstLetter(user.name) || "Profile"}</Button>
             </DropdownMenuTrigger>
             <DropdownMenuContent>
               <DropdownMenuItem onClick={handleLogout}>Logout</DropdownMenuItem>

@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import LandingPage from './pages/LandingPage';
 import NavbarLayout from './layout/NavbarLayout';
@@ -7,8 +7,36 @@ import RegisterPage from "./pages/RegisterPage";
 import ProtectedRoute from "./routes/ProtectedRoute";
 import BookSlots from "./pages/BookSlots";
 import MyBookings from "./pages/MyBookings";
+import { useDispatch } from 'react-redux';
+import axiosInstance from './utils/axiosInstance';
+import { setLoading, setUser } from './store/userSlice';
 
 const App = () => {
+  const dispatch = useDispatch();
+
+  useEffect(() => {
+    const fetchUserFromCookie = async () => {
+      dispatch(setLoading(true))
+      try {
+        const res = await axiosInstance.get("/api/auth/me");
+        dispatch(
+          setUser({
+            user: res.data.user,
+            role: res.data.user.role,
+          })
+        );
+      } catch (err) {
+        console.log("Not logged in", err.response?.data?.message);
+      }
+      finally {
+        dispatch(setLoading(false)); //  End loading
+      }
+
+    };
+
+    fetchUserFromCookie();
+  }, []);
+
   return (
     <BrowserRouter>
       <Routes>

@@ -1,12 +1,11 @@
-import { useEffect } from "react";
 import { useSelector } from "react-redux";
 import { Navigate } from "react-router-dom";
 
 const ProtectedRoute = ({ children, allowedRoles = [] }) => {
-  const { user, token, role } = useSelector((state) => state.user);
+  const { user, role } = useSelector((state) => state.user);
 
-  // Not logged in
-  if (!token) {
+  // ✅ Check user instead of token
+  if (!user) {
     return <Navigate to="/login" replace />;
   }
 
@@ -15,14 +14,6 @@ const ProtectedRoute = ({ children, allowedRoles = [] }) => {
     return <Navigate to="/" replace />;
   }
 
-  useEffect(() => {
-    if (user === null) {
-      return <Navigate to="/" replace />;
-    } else {
-        return children;
-    }
-  }, [user]);
-  
   return children;
 };
 

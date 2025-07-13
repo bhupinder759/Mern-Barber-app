@@ -7,6 +7,8 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
 import { toast } from "sonner";
+import axiosInstance from "@/utils/axiosInstance";
+import sizzer from '@/assets/sizzer.png'
 
 const LoginPage = () => {
   const [form, setForm] = useState({ email: "", password: "" });
@@ -28,12 +30,12 @@ const LoginPage = () => {
 
     try {
       setLoadingState(true);
-      const res = await axios.post(`${import.meta.env.VITE_API}/api/auth/login`, form);
+      const res = await axiosInstance.post(`/api/auth/login`, form);
 
       dispatch(
         setUser({
           user: res.data.user,
-          token: res.data.token,
+        //   token: null,
           role: res.data.user.role,
         })
       );
@@ -43,7 +45,8 @@ const LoginPage = () => {
       if (res.data.user.role === "admin") {
         navigate("/dashboard");
       } else {
-        navigate("/book-slots");
+        // navigate("/book-slots");
+        navigate("/");
       }
     } catch (err) {
       console.error(err);
@@ -54,8 +57,16 @@ const LoginPage = () => {
   };
 
   return (
-    <div className="flex items-center justify-center min-h-screen bg-gray-50 px-4">
-      <div className="w-full max-w-md bg-white p-8 rounded-lg shadow">
+    <div className="flex items-center justify-center min-h-screen bg-[#b4b1fd] px-4">
+      <div className="md:w-300 md:h-130 h-auto w-auto flex flex-col items-center shadow-lg md:flex-row md:shadow-none">
+        <div className="bg-none w-auto h-auto md:w-[35%] md:h-full md:flex md:flex-col md:items-center md:bg-[#7a78cf]">
+          <div className=""><img src={sizzer} /></div>
+          <h2 className="text-3xl font-semibold text-white text-center mb-4">Book Your Haircut</h2>
+          <p className="text-lg text-white text-center">Login to book your haircut</p>
+        </div>
+        <div className="w-[65%] h-full bg-[#e4e5ed]"></div>
+      </div>
+      {/* <div className="w-full max-w-md bg-white p-8 rounded-lg shadow">
         <h2 className="text-2xl font-semibold mb-6 text-center">Login to your account</h2>
 
         <form onSubmit={handleLogin} className="space-y-5">
@@ -89,7 +100,7 @@ const LoginPage = () => {
             {loading ? "Logging in..." : "Login"}
           </Button>
         </form>
-      </div>
+      </div> */}
     </div>
   );
 };
