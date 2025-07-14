@@ -1,20 +1,27 @@
 import { useSelector } from "react-redux";
-import { Navigate } from "react-router-dom";
+import { Navigate, Outlet } from "react-router-dom";
+import GlobalLoader from "@/pages/GlobalLoader";
 
-const ProtectedRoute = ({ children, allowedRoles = [] }) => {
-  const { user, role } = useSelector((state) => state.user);
+const ProtectedRoute = ({ allowedRoles = [] }) => {
+  const { user, role, authChecked } = useSelector((state) => state.user);
 
-  // ✅ Check user instead of token
+  if (!authChecked) {
+    return (
+      <div className="flex justify-center items-center h-screen">
+        <div className="text-gray-500 text-xl">Checking auth...</div>
+      </div>
+    );
+  }
+
   if (!user) {
     return <Navigate to="/login" replace />;
   }
 
-  // Role not allowed
   if (allowedRoles.length && !allowedRoles.includes(role)) {
     return <Navigate to="/" replace />;
   }
 
-  return children;
+  return <Outlet />;
 };
 
 export default ProtectedRoute;

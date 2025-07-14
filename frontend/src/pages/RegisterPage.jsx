@@ -14,14 +14,14 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-
+import sizzer from "@/assets/sizzer.png";
 
 const RegisterPage = () => {
   const [form, setForm] = useState({
     name: "",
     email: "",
     password: "",
-    role: "customer", // default role
+    role: "customer",
   });
 
   const [loading, setLoading] = useState(false);
@@ -41,7 +41,10 @@ const RegisterPage = () => {
 
     try {
       setLoading(true);
-      const res = await axios.post(`${import.meta.env.VITE_API}/api/auth/register`, form);
+      const res = await axios.post(
+        `${import.meta.env.VITE_API}/api/auth/register`,
+        form
+      );
 
       dispatch(
         setUser({
@@ -67,71 +70,87 @@ const RegisterPage = () => {
   };
 
   return (
-    <div className="flex items-center justify-center min-h-screen bg-gray-50 px-4">
-      <div className="w-full max-w-md bg-white p-8 rounded-lg shadow">
-        <h2 className="text-2xl font-semibold mb-6 text-center">Create your account</h2>
-
-        <form onSubmit={handleRegister} className="space-y-5">
-          <div>
-            <Label htmlFor="name">Name</Label>
-            <Input
-              type="text"
-              name="name"
-              id="name"
-              placeholder="Your full name"
-              value={form.name}
-              onChange={handleChange}
-              required
-            />
+    <div className="flex items-center h-auto justify-center min-h-screen bg-[#b4b1fd] py-25">
+      <div className="md:w-300 md:h-130 h-auto w-auto flex flex-col items-center shadow-none md:flex-row lg:shadow">
+        <div className="bg-none w-auto h-auto md:w-[35%] md:h-full md:flex md:flex-col md:items-center md:bg-[#7a78cf]">
+          <div className="">
+            <img src={sizzer} />
           </div>
+          <h2 className="text-3xl font-semibold text-white text-center mb-4">
+            Book Your Haircut
+          </h2>
+          <p className="text-lg text-white text-center">
+            Register to get started
+          </p>
+        </div>
+        <div className="w-[65%] h-full bg-[#e4e5ed] flex flex-col items-center justify-center">
+          <div className="w-full max-w-md bg-white p-8 rounded-lg shadow-2xl shadow-indigo-400">
+            <h2 className="text-2xl font-semibold mb-6 text-center">
+              Create your account
+            </h2>
 
-          <div>
-            <Label htmlFor="email">Email</Label>
-            <Input
-              type="email"
-              name="email"
-              id="email"
-              placeholder="you@example.com"
-              value={form.email}
-              onChange={handleChange}
-              required
-            />
+            <form onSubmit={handleRegister} className="space-y-5">
+              <div>
+                <Label htmlFor="name">Name</Label>
+                <Input
+                  type="text"
+                  name="name"
+                  id="name"
+                  placeholder="Your full name"
+                  value={form.name}
+                  onChange={handleChange}
+                  required
+                />
+              </div>
+
+              <div>
+                <Label htmlFor="email">Email</Label>
+                <Input
+                  type="email"
+                  name="email"
+                  id="email"
+                  placeholder="you@example.com"
+                  value={form.email}
+                  onChange={handleChange}
+                  required
+                />
+              </div>
+
+              <div>
+                <Label htmlFor="password">Password</Label>
+                <Input
+                  type="password"
+                  name="password"
+                  id="password"
+                  placeholder="••••••••"
+                  value={form.password}
+                  onChange={handleChange}
+                  required
+                />
+              </div>
+
+              <div>
+                <Label htmlFor="role">Select Role</Label>
+                <Select
+                  onValueChange={(value) => setForm({ ...form, role: value })}
+                  defaultValue={form.role}
+                >
+                  <SelectTrigger className="w-full">
+                    <SelectValue placeholder="Select a role" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="customer">Customer</SelectItem>
+                    <SelectItem value="admin">Admin</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
+
+              <Button type="submit" className="w-full" disabled={loading}>
+                {loading ? "Registering..." : "Register"}
+              </Button>
+            </form>
           </div>
-
-          <div>
-            <Label htmlFor="password">Password</Label>
-            <Input
-              type="password"
-              name="password"
-              id="password"
-              placeholder="••••••••"
-              value={form.password}
-              onChange={handleChange}
-              required
-            />
-          </div>
-
-          <div>
-            <Label htmlFor="role">Select Role</Label>
-            <Select
-              onValueChange={(value) => setForm({ ...form, role: value })}
-              defaultValue={form.role}
-            >
-              <SelectTrigger className="w-full">
-                <SelectValue placeholder="Select a role" />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="customer">Customer</SelectItem>
-                <SelectItem value="admin">Admin</SelectItem>
-              </SelectContent>
-            </Select>
-          </div>
-
-
-          <Button type="submit" className="w-full" disabled={loading}>
-            {loading ? "Registering..." : "Register"}
-          </Button>
-        </form>
+        </div>
       </div>
     </div>
   );

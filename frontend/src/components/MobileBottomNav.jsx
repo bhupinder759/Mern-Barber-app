@@ -16,7 +16,7 @@ const MobileBottomNav = () => {
   const { user } = useSelector((state) => state.user);
 
   // Show only if user is logged in
-  if (!user) return null;
+  if (!user || user.role === "admin") return null;
 
   return (
     <nav className="fixed bottom-0 z-50 w-full bg-white border-t border-gray-200 md:hidden shadow">
