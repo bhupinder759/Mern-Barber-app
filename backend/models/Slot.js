@@ -3,26 +3,52 @@ const mongoose = require('mongoose');
 const slotSchema = new mongoose.Schema({
   barber: {
     type: mongoose.Schema.Types.ObjectId,
-    ref: 'User',
+    ref: 'User', // Admin who created the slot
     required: true,
   },
   date: {
-    type: String, // e.g., '2025-07-11'
+    type: String, // Format: '2025-07-17'
     required: true,
   },
-  time: {
-    type: String, // e.g., '10:30 AM'
+  startTime: {
+    type: String, // Format: '10:00'
     required: true,
   },
-  isBooked: {
-    type: Boolean,
-    default: false,
+  endTime: {
+    type: String, // Format: '11:00'
+    required: true,
   },
-  bookedBy: {
-  type: mongoose.Schema.Types.ObjectId,
-  ref: 'User',
-  default: null,
-}
-});
+  service: {
+    type: String, // Example: 'Haircut', 'Shave'
+    required: true,
+  },
+  maxBookings: {
+    type: Number,
+    default: 1,
+    min: 1,
+  },
+  price: {
+    type: Number,
+    required: true,
+  },
+  discount: {
+    type: Number,
+    default: 0, // Percentage discount
+    min: 0,
+    max: 100,
+  },
+  bookings: [
+    {
+      customer: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'User',
+      },
+      bookedAt: {
+        type: Date,
+        default: Date.now,
+      },
+    },
+  ],
+}, { timestamps: true });
 
 module.exports = mongoose.model('Slot', slotSchema);
