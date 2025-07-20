@@ -37,6 +37,11 @@ const slotSchema = new mongoose.Schema({
     min: 0,
     max: 100,
   },
+  status: {
+    type: String,
+    enum: ['available', 'booked'],
+    default: 'available',
+  },
   bookings: [
     {
       customer: {

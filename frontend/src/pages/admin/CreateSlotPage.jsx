@@ -4,7 +4,6 @@ import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useEffect, useState } from "react";
-import axios from "axios";
 import { format } from "date-fns";
 
 import { Input } from "@/components/ui/input";
@@ -21,6 +20,7 @@ import {
 } from "@/components/ui/select";
 import { Calendar } from "@/components/ui/calendar";
 import { cn } from "@/lib/utils";
+import axiosInstance from "@/utils/axiosInstance";
 
 const slotSchema = z
   .object({
@@ -70,26 +70,35 @@ export default function CreateSlot() {
     },
   });
 
+  toast("Create a new slot below")
+
   const onSubmit = async (data) => {
-    console.log(data, "Submitting slot data");
     try {
       setLoading(true);
       const payload = {
         ...data,
         date: format(data.date, "yyyy-MM-dd"),
       };
-      await axios.post("/api/slots/", payload);
+      await axiosInstance.post(`/api/slots/create`, payload);
       toast.success("Slot created successfully!");
+      // Reset form after successful creation
+      setValue("service", "");
+      setValue("date", new Date());
+      setValue("startTime", "");
+      setValue("endTime", "");
+      setValue("maxBookings", 1);
+      setValue("price", 0);
+      setValue("discount", 0);
     } catch (err) {
-      toast.error("Failed to create slot.");
-      console.error("Error creating slot:", err);
+      toast.error( err.response?.data?.message || "Failed to create slot.");
+      console.log("Error creating slot:", err.response?.data);
     } finally {
       setLoading(false);
     }
   };
 
   return (
-    <Card className="max-w-2xl mx-auto p-6 shadow-xl rounded-2xl border">
+    <Card className="max-w-2xl mx-auto p-6 shadow-xl rounded-2xl border z-0">
       <h2 className="text-2xl font-bold mb-6 text-center">Create a New Slot</h2>
       <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
         {/* Service Selection */}

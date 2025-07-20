@@ -16,6 +16,7 @@ import CreateSlotPage from './pages/admin/CreateSlotPage';
 import MySlotsPage from './pages/admin/MySlotsPage';
 import AdminBookingsPage from './pages/admin/AdminBookingsPage';
 import GlobalLoader from './pages/GlobalLoader';
+import { toast } from 'sonner';
 
 const App = () => {
   const { user, isloading } = useSelector((state) => state.user);
@@ -38,6 +39,7 @@ const App = () => {
 
   fetchUserFromCookie();
 }, []);
+
 
   if (isloading) {
   return <GlobalLoader />; // Optional global loader
