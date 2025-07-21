@@ -4,6 +4,7 @@ import { LogOut, LayoutDashboard, CalendarPlus, CalendarDays, Users } from "luci
 import { Button } from "@/components/ui/button";
 import { useDispatch } from "react-redux";
 import { logout } from "@/store/userSlice";
+import { toast } from "sonner";
 
 const navLinks = [
   {
@@ -36,6 +37,8 @@ const AdminLayout = () => {
     dispatch(logout());
     window.location.href = "/login";
   };
+
+  toast("Welcome to the Admin Panel!", { variant: "success" });
 
   return (
     <div className="lg:flex min-h-screen bg-gradient-to-tr from-indigo-100 via-purple-100 to-blue-100">

@@ -17,7 +17,6 @@ export default function MySlots() {
   const [editingSlot, setEditingSlot] = useState(null);
   const [form, setForm] = useState({ date: "", startTime: "", endTime: "", price: "", discount: "", maxBookings: "", service: "" });
 
-  console.log("MySlots component rendered", slots);
   // Fetch all slots
   useEffect(() => {
     const fetchSlots = async () => {
@@ -32,6 +31,7 @@ export default function MySlots() {
 
     fetchSlots();
   }, []);
+  
 
   const handleEditClick = (slot) => {
     setEditingSlot(slot);
@@ -51,15 +51,16 @@ export default function MySlots() {
   };
 
   const handleUpdateSlot = async () => {
+    console.log(editingSlot._id)
     try {
-      const res = await axios.put(`/api/slots/${editingSlot._id}`, form);
-      
-      alert("Slot updated!");
+      const res = await axiosInstance.put(`/api/slots/${editingSlot._id}`, form);
+
+      toast("Update Successfully")
       window.location.reload();
     } catch (err) {
       console.log("Error updating slot:", err);
       toast.error("Failed to update slot");
-      alert("Error updating slot");
+      toast("Error updating slot");
     }
   };
 
