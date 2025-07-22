@@ -38,8 +38,6 @@ const AdminLayout = () => {
     window.location.href = "/login";
   };
 
-  toast("Welcome to the Admin Panel!", { variant: "success" });
-
   return (
     <div className="lg:flex min-h-screen bg-gradient-to-tr from-indigo-100 via-purple-100 to-blue-100">
       {/* Sidebar for desktop, Topbar for mobile */}

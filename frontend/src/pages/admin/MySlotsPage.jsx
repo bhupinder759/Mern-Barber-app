@@ -67,10 +67,11 @@ export default function MySlots() {
   const handleDelete = async (id) => {
     if (!confirm("Are you sure you want to delete this slot?")) return;
     try {
-      await axios.delete(`/api/delete-slot/${id}`, { withCredentials: true });
+      await axiosInstance.delete(`/api/slots/${id}`);
       setSlots((prev) => prev.filter((slot) => slot._id !== id));
-    } catch (err) {
-      alert("Error deleting slot");
+    } catch (error) {
+      console.log("Error deleting slot:", error);
+      toast("Error deleting slot");
     }
   };
 

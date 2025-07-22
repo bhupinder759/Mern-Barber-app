@@ -9,6 +9,7 @@ const authRoutes = require('./routes/authRoutes');
 const testRoutes = require('./routes/testRoute'); // or testRoutes.js
 const slotRoutes = require('./routes/slotRoutes');
 const bookingRoutes = require('./routes/bookingRoutes');
+const barberRoutes = require('./routes/barberRoutes.js'); // Import barber routes
 
 dotenv.config();
 
@@ -31,6 +32,7 @@ app.use('/api/auth', authRoutes);
 app.use('/api/test', testRoutes);
 app.use('/api/slots', slotRoutes);
 app.use('/api/bookings', bookingRoutes);
+app.use('/api/barber', barberRoutes);
 
 app.listen(port, () => {
     console.log(`Example app listening on port ${port}`);
