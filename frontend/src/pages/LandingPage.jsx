@@ -1,245 +1,285 @@
 import { useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
-import { Card, CardContent } from "@/components/ui/card";
-import barber1 from "@/assets/long.jpg"; 
-import barber2 from "@/assets/square.jpg"; // Replace with actual images
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import {
+  Accordion,
+  AccordionContent,
+  AccordionItem,
+  AccordionTrigger,
+} from "@/components/ui/accordion";
+import {
+  Carousel,
+  CarouselContent,
+  CarouselItem,
+  CarouselNext,
+  CarouselPrevious,
+} from "@/components/ui/carousel";
+import { motion } from "framer-motion";
+import {
+  Scissors,
+  Clock,
+  MapPin,
+  CreditCard,
+  Star,
+  Quote,
+  Twitter,
+  Instagram,
+  Facebook,
+} from "lucide-react";
 
-// import { Accordion, AccordionItem } from "@/components/ui/accordion"; // Example for FAQ
-import { motion } from "framer-motion"; // For animations
+// ASSETS (assuming you have these images)
+import barber1 from "@/assets/long.jpg";
+import barber2 from "@/assets/square.jpg";
 
-// Dummy icons (replace with real icons or use Heroicons/Phosphor/React Icons)
-const Icon = ({ children }) => (
-  <div className="w-12 h-12 flex items-center justify-center rounded-full bg-indigo-100 text-indigo-600 mb-4 text-2xl">
-    {children}
-  </div>
-);
-
-// Dummy data for features, testimonials, barbers, pricing, and FAQs
+// --- DUMMY DATA (No Changes) ---
 const FEATURES = [
-  { icon: "💈", title: "Trusted Barbers", desc: "Handpicked, reviewed professionals." },
-  { icon: "⏰", title: "Instant Booking", desc: "Book in seconds, no waiting." },
-  { icon: "📍", title: "Nearby Shops", desc: "Find barbers close to you." },
-  { icon: "💳", title: "Easy Payments", desc: "Pay online or in person." },
+  { icon: <Scissors />, title: "Trusted Barbers", desc: "Handpicked, reviewed professionals." },
+  { icon: <Clock />, title: "Instant Booking", desc: "Book in seconds, no waiting." },
+  { icon: <MapPin />, title: "Nearby Shops", desc: "Find top-rated barbers close to you." },
+  { icon: <CreditCard />, title: "Easy Payments", desc: "Pay securely online or in person." },
 ];
-
 const TESTIMONIALS = [
-  { name: "Alex", text: "Super easy to book and no waiting at all!", avatar: "🧑" },
-  { name: "Priya", text: "Loved the experience and the barber was great.", avatar: "👩" },
-  { name: "Sam", text: "Best way to get a haircut in town!", avatar: "🧔" },
+  { name: "Alex Johnson", text: "The easiest booking experience I've ever had. Found a great barber in minutes!", avatar: "https://placehold.co/100x100" },
+  { name: "Priya Sharma", text: "Absolutely seamless. The app is beautiful and the no-wait promise is real. Highly recommend!", avatar: "https://placehold.co/100x100" },
+  { name: "Sam Lee", text: "This has completely changed how I get my haircuts. The quality of barbers is top-notch.", avatar: "https://placehold.co/100x100" },
+  { name: "Maria Garcia", text: "A must-have app for anyone who values their time and style. Five stars!", avatar: "https://placehold.co/100x100" },
 ];
-
 const BARBERS = [
-  { name: "Mike's Barbershop", location: "Downtown", img: "https://placehold.co/100x100", rating: 4.8 },
-  { name: "Elite Cuts", location: "Uptown", img: "https://placehold.co/100x100", rating: 4.7 },
-  { name: "Classic Styles", location: "Suburb", img: "https://placehold.co/100x100", rating: 4.9 },
-  // ...fetch from backend
+  { name: "Mike's Barbershop", location: "Downtown", img: "https://placehold.co/300x300", rating: 4.8 },
+  { name: "Elite Cuts", location: "Uptown", img: "https://placehold.co/300x300", rating: 4.7 },
+  { name: "Classic Styles", location: "Suburb", img: "https://placehold.co/300x300", rating: 4.9 },
+  { name: "The Gentleman's Chair", location: "Financial District", img: "https://placehold.co/300x300", rating: 4.9 },
 ];
-
 const PRICING = [
-  { plan: "Basic Cut", price: "$15", features: ["Haircut", "Quick Style"] },
-  { plan: "Premium", price: "$25", features: ["Haircut", "Beard Trim", "Wash"] },
-  { plan: "VIP", price: "$40", features: ["All services", "Priority Booking"] },
+  { plan: "Classic Cut", price: "$25", features: ["Expert Haircut", "Quick Style", "Hot Towel"], popular: false },
+  { plan: "Premium", price: "$45", features: ["Everything in Classic", "Beard Trim & Shape-up", "Shampoo & Wash"], popular: true },
+  { plan: "VIP Experience", price: "$60", features: ["Everything in Premium", "Priority Booking", "Complimentary Drink"], popular: false },
 ];
-
 const FAQS = [
-  { q: "How do I book a slot?", a: "Just choose a barber, pick a time, and confirm your booking." },
-  { q: "Can I cancel or reschedule?", a: "Yes, you can manage your bookings from your dashboard." },
-  { q: "Are payments secure?", a: "All payments are processed securely via trusted gateways." },
+  { q: "How do I book an appointment?", a: "Simply browse for a barber, select a service and time slot that works for you, and confirm your booking. It's that easy!" },
+  { q: "Can I cancel or reschedule my booking?", a: "Yes, you can easily manage your appointments directly from your user dashboard up to 2 hours before the scheduled time." },
+  { q: "Are the online payments secure?", a: "Absolutely. We use Stripe, a leading payment processor, to ensure all your transactions are encrypted and 100% secure." },
+  { q: "How are barbers selected for the platform?", a: "We have a rigorous vetting process. Each barber is reviewed for their skill, experience, hygiene standards, and customer feedback before joining." },
 ];
 
-export default function LandingPage() {
+// --- ANIMATION VARIANTS ---
+const fadeIn = (direction = "up", delay = 0) => ({
+  initial: { opacity: 0, y: direction === "up" ? 20 : -20 },
+  whileInView: { opacity: 1, y: 0, transition: { duration: 0.6, delay, ease: "easeOut" } },
+  viewport: { once: true, amount: 0.3 },
+});
+
+export default function EnhancedLandingPage() {
   const navigate = useNavigate();
 
   return (
-    <div className="min-h-screen bg-white text-gray-800 w-full flex flex-col">
-      {/* Hero Section */}
-      <section className="flex flex-col-reverse md:flex-row items-center justify-between py-16 px-4 md:px-8 bg-gradient-to-r from-indigo-500 to-purple-600 text-white">
+    <div className="min-h-screen bg-[#0a0a0a] text-gray-200 w-full flex flex-col overflow-x-hidden">
+      {/* ======================= */}
+      {/* HERO SECTION       */}
+      {/* ======================= */}
+      <section className="relative flex flex-col md:flex-row items-center justify-between py-24 md:py-32 px-6 md:px-16">
+        <div className="absolute inset-0 bg-grid-white/[0.05] [mask-image:linear-gradient(to_bottom,white_50%,transparent_100%)]"></div>
         {/* Left: Content */}
-        <div className="w-full md:w-1/2 flex flex-col items-start md:items-start text-left">
-          <h1 className="text-4xl md:text-6xl font-bold mb-4">Book Your Haircut Without Waiting</h1>
-          <p className="text-lg md:text-xl mb-6">Choose your time slot, skip the queue, and look your best.</p>
-          <Button className="text-lg px-6 py-3" onClick={() => navigate("/login")}>
-            Get Started
-          </Button>
-        </div>
-        {/* Right: Images with animation */}
-        <div className="w-full md:w-1/2 flex justify-center items-center mb-8 md:mb-0">
-          
-          <motion.div
-            initial={{ opacity: 0, y: 40 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8 }}
-            className="relative flex gap-4 fade-in-up"
+        <motion.div
+          initial={{ opacity: 0, x: -50 }}
+          animate={{ opacity: 1, x: 0 }}
+          transition={{ duration: 0.8, ease: "easeOut" }}
+          className="w-full md:w-1/2 flex flex-col items-center md:items-start text-center md:text-left z-10"
+        >
+          <h1 className="text-4xl md:text-6xl font-bold mb-4 leading-tight">
+            Style On-Demand. <br />
+            <span className="text-blue-400">No More Waiting.</span>
+          </h1>
+          <p className="text-lg md:text-xl mb-8 text-gray-400 max-w-lg">
+            Find elite barbers, book your perfect time slot instantly, and walk in like a VIP. Your next great haircut is just a click away.
+          </p>
+          <Button
+            size="lg"
+            className="bg-blue-500 hover:bg-blue-600 text-white font-bold text-lg px-8 py-6 transition-transform duration-300 hover:scale-105"
+            onClick={() => navigate("/login")}
           >
-         
+            Find Your Barber
+          </Button>
+        </motion.div>
+        {/* Right: Images */}
+        <motion.div
+          initial={{ opacity: 0, scale: 0.8 }}
+          animate={{ opacity: 1, scale: 1 }}
+          transition={{ duration: 0.8, delay: 0.2, ease: "easeOut" }}
+          className="relative w-full md:w-1/2 flex justify-center items-center mt-12 md:mt-0 z-10"
+        >
           <div className="relative flex gap-4">
-            <img
+            <motion.img
+              initial={{ y: 40, rotate: -5 }}
+              animate={{ y: 0, rotate: -8 }}
+              transition={{ duration: 1, ease: "easeInOut", repeat: Infinity, repeatType: "mirror" }}
               src={barber1}
-              alt="Barber 1"
-              className="rounded-xl shadow-lg w-36 h-48 md:w-44 md:h-60 object-cover transform hover:scale-105 transition duration-300"
-              style={{ animation: "fadeUp 1s ease" }}
+              alt="Barber giving a haircut"
+              className="rounded-xl shadow-2xl shadow-blue-500/10 w-44 h-60 md:w-52 md:h-72 object-cover border-2 border-gray-700"
             />
-            <img
+            <motion.img
+              initial={{ y: -20, rotate: 5 }}
+              animate={{ y: 0, rotate: 8 }}
+              transition={{ duration: 1, ease: "easeInOut", repeat: Infinity, repeatType: "mirror", delay: 0.3 }}
               src={barber2}
-              alt="Barber 2"
-              className="rounded-xl shadow-lg w-36 h-48 md:w-44 md:h-60 object-cover transform hover:scale-105 transition duration-300 mt-8"
-              style={{ animation: "fadeUp 1.3s ease" }}
+              alt="Stylish haircut"
+              className="rounded-xl shadow-2xl shadow-blue-500/10 w-44 h-60 md:w-52 md:h-72 object-cover mt-8 border-2 border-gray-700"
             />
           </div>
-          </motion.div>
-        </div>
+        </motion.div>
       </section>
-      {/* Add keyframes for fadeUp animation */}
-      <style>
-        {`
-          @keyframes fadeUp {
-            0% { opacity: 0; transform: translateY(40px);}
-            100% { opacity: 1; transform: translateY(0);}
-          }
-        `}
-      </style>
 
-
-      {/* Features Section */}
-      <section className="py-14 px-4 md:px-20 bg-gray-50">
-        <h2 className="text-3xl font-bold text-center mb-10">Why Choose Us?</h2>
-        <div className="grid gap-8 md:grid-cols-4">
+      {/* ======================= */}
+      {/* FEATURES SECTION     */}
+      {/* ======================= */}
+      <section className="py-20 px-6 md:px-16 bg-[#111111]">
+        <motion.h2 {...fadeIn()} className="text-3xl md:text-4xl font-bold text-center mb-12">
+          Why You'll Love It
+        </motion.h2>
+        <div className="grid gap-8 sm:grid-cols-2 md:grid-cols-4">
           {FEATURES.map((f, i) => (
-            <div key={i} className="flex flex-col items-center text-center">
-              <Icon>{f.icon}</Icon>
-              <h3 className="text-xl font-semibold mb-2">{f.title}</h3>
-              <p className="text-gray-600">{f.desc}</p>
-            </div>
-          ))}
-        </div>
-      </section>
-
-      {/* How It Works Section */}
-      <section className="py-14 px-4 md:px-20 text-center">
-        <h2 className="text-3xl font-bold mb-10">How It Works</h2>
-        <div className="grid gap-6 md:grid-cols-3">
-          {[
-            { title: "Choose a Barber", desc: "Browse through trusted barbershops in your area." },
-            { title: "Pick a Slot", desc: "Select a time that suits you best." },
-            { title: "Show Up & Shine", desc: "No waiting. Just walk in and get styled!" }
-          ].map((step, idx) => (
-            <Card key={idx} className="shadow-md">
-              <CardContent className="p-6">
-                <h3 className="text-xl font-semibold mb-2">{step.title}</h3>
-                <p>{step.desc}</p>
-              </CardContent>
-            </Card>
-          ))}
-        </div>
-      </section>
-
-      {/* Testimonials Slider */}
-      <section className="py-14 px-4 md:px-20 bg-gray-50">
-        <h2 className="text-3xl font-bold text-center mb-10">What Our Users Say</h2>
-        {/* Replace with a real slider/carousel (e.g., Swiper/React Slick) */}
-        <div className="flex gap-6 overflow-x-auto pb-4">
-          {TESTIMONIALS.map((t, i) => (
-            <div key={i} className="min-w-[280px] bg-white rounded-lg shadow p-6 flex flex-col items-center">
-              <div className="text-4xl mb-2">{t.avatar}</div>
-              <p className="italic mb-2">"{t.text}"</p>
-              <span className="font-semibold">{t.name}</span>
-            </div>
-          ))}
-        </div>
-      </section>
-
-      {/* Available Barbers/Shops Carousel */}
-      <section className="py-14 px-4 md:px-20">
-        <h2 className="text-3xl font-bold text-center mb-10">Available Barbershops</h2>
-        {/* TODO: Replace with dynamic fetch from backend */}
-        <div className="flex gap-6 overflow-x-auto pb-4">
-          {BARBERS.map((b, i) => (
-            <div key={i} className="min-w-[220px] bg-white rounded-lg shadow p-4 flex flex-col items-center">
-              <img src={b.img} alt={b.name} className="w-20 h-20 rounded-full mb-3 object-cover" />
-              <h3 className="text-lg font-semibold">{b.name}</h3>
-              <p className="text-sm text-gray-500">{b.location}</p>
-              <span className="mt-2 text-yellow-500 font-bold">{b.rating} ★</span>
-              <Button className="mt-4 w-full" onClick={() => navigate("/login")}>Book Now</Button>
-            </div>
-          ))}
-        </div>
-      </section>
-
-      {/* Pricing Plans / Service Highlights */}
-      <section className="py-14 px-4 md:px-20 bg-gray-50">
-        <h2 className="text-3xl font-bold text-center mb-10">Our Pricing</h2>
-        <div className="grid gap-8 md:grid-cols-3">
-          {PRICING.map((p, i) => (
-            <Card key={i} className="shadow-md">
-              <CardContent className="p-6 flex flex-col items-center">
-                <h3 className="text-xl font-semibold mb-2">{p.plan}</h3>
-                <div className="text-3xl font-bold mb-4">{p.price}</div>
-                <ul className="mb-4 text-gray-600">
-                  {p.features.map((f, j) => (
-                    <li key={j}>• {f}</li>
-                  ))}
-                </ul>
-                <Button onClick={() => navigate("/login")}>Choose</Button>
-              </CardContent>
-            </Card>
-          ))}
-        </div>
-      </section>
-
-      {/* FAQ Accordion Section */}
-      <section className="py-14 px-4 md:px-20">
-        <h2 className="text-3xl font-bold text-center mb-10">Frequently Asked Questions</h2>
-        {/* Replace with Accordion from ShadCN or Headless UI */}
-        <div className="max-w-2xl mx-auto">
-          {FAQS.map((faq, i) => (
-            <div key={i} className="mb-4 border-b">
-              <button className="w-full text-left py-3 font-semibold focus:outline-none">
-                {faq.q}
-              </button>
-              <div className="pl-2 pb-3 text-gray-600">
-                {faq.a}
+            <motion.div
+              key={f.title}
+              {...fadeIn("up", i * 0.1)}
+              className="flex flex-col items-center text-center p-6 rounded-lg bg-gray-900/50 hover:bg-gray-800/60 transition-colors duration-300"
+            >
+              <div className="w-16 h-16 flex items-center justify-center rounded-full bg-blue-500/10 text-blue-400 mb-4">
+                {f.icon}
               </div>
-            </div>
+              <h3 className="text-xl font-semibold mb-2">{f.title}</h3>
+              <p className="text-gray-400">{f.desc}</p>
+            </motion.div>
           ))}
         </div>
       </section>
 
-      {/* Call-to-Action Banner */}
-      <section className="py-10 px-4 md:px-20 bg-indigo-600 text-white text-center">
-        <h2 className="text-2xl md:text-3xl font-bold mb-4">Ready to look your best?</h2>
-        <Button className="text-lg px-8 py-3" onClick={() => navigate("/register")}>
-          Register or Book Now
-        </Button>
+      {/* ======================= */}
+      {/* TESTIMONIALS SECTION   */}
+      {/* ======================= */}
+      <section className="py-20 px-6 md:px-16">
+        <motion.h2 {...fadeIn()} className="text-3xl md:text-4xl font-bold text-center mb-12">
+          Trusted by Thousands
+        </motion.h2>
+        <motion.div {...fadeIn()}>
+          <Carousel
+            opts={{ align: "start", loop: true }}
+            className="w-full max-w-xs sm:max-w-xl md:max-w-3xl lg:max-w-5xl mx-auto"
+          >
+            <CarouselContent>
+              {TESTIMONIALS.map((t, i) => (
+                <CarouselItem key={i} className="md:basis-1/2 lg:basis-1/3">
+                  <div className="p-1">
+                    <Card className="bg-gray-900/50 border-gray-800 h-full flex flex-col">
+                      <CardContent className="p-6 flex flex-col items-start justify-between flex-grow">
+                        <Quote className="w-8 h-8 text-blue-400 mb-4" />
+                        <p className="text-gray-300 mb-6 flex-grow">"{t.text}"</p>
+                        <div className="flex items-center">
+                          <img src={t.avatar} alt={t.name} className="w-12 h-12 rounded-full mr-4 object-cover" />
+                          <div>
+                            <p className="font-semibold">{t.name}</p>
+                            <p className="text-sm text-gray-500">Verified Customer</p>
+                          </div>
+                        </div>
+                      </CardContent>
+                    </Card>
+                  </div>
+                </CarouselItem>
+              ))}
+            </CarouselContent>
+            <CarouselPrevious className="text-white bg-gray-800 hover:bg-gray-700 hover:text-white" />
+            <CarouselNext className="text-white bg-gray-800 hover:bg-gray-700 hover:text-white" />
+          </Carousel>
+        </motion.div>
       </section>
 
-      {/* Footer */}
-      <footer className="py-8 px-4 md:px-20 bg-gray-900 text-gray-300">
-        <div className="flex flex-col md:flex-row md:justify-between gap-8">
-          <div>
-            <h3 className="font-bold text-lg mb-2">BarberBook</h3>
-            <p className="text-sm">Book your next haircut in seconds.</p>
-          </div>
-          <div>
-            <h4 className="font-semibold mb-2">Quick Links</h4>
-            <ul className="text-sm space-y-1">
-              <li><a href="/login" className="hover:underline">Login</a></li>
-              <li><a href="/register" className="hover:underline">Register</a></li>
-              <li><a href="/about" className="hover:underline">About</a></li>
-            </ul>
-          </div>
-          <div>
-            <h4 className="font-semibold mb-2">Contact</h4>
-            <p className="text-sm">support@barberbook.com</p>
-            <div className="flex gap-3 mt-2">
-              {/* Replace with real social icons */}
-              <a href="#" className="hover:text-white">🐦</a>
-              <a href="#" className="hover:text-white">📸</a>
-              <a href="#" className="hover:text-white">💬</a>
-            </div>
-          </div>
+      {/* ======================= */}
+      {/* PRICING SECTION      */}
+      {/* ======================= */}
+      <section className="py-20 px-6 md:px-16 bg-[#111111]">
+        <motion.h2 {...fadeIn()} className="text-3xl md:text-4xl font-bold text-center mb-4">
+          Simple, Transparent Pricing
+        </motion.h2>
+        <motion.p {...fadeIn("up", 0.1)} className="text-center text-gray-400 mb-12 max-w-2xl mx-auto">
+          Choose a plan that fits your needs. No hidden fees, ever. All plans give you access to our top-rated barbers.
+        </motion.p>
+        <div className="grid gap-8 md:grid-cols-3 max-w-5xl mx-auto">
+          {PRICING.map((p, i) => (
+            <motion.div {...fadeIn("up", i * 0.15)} key={i}>
+              <Card
+                className={`h-full flex flex-col p-2 rounded-xl transition-all duration-300 ${p.popular
+                  ? "bg-gradient-to-br from-blue-900/50 to-gray-900 border-blue-500 shadow-lg shadow-blue-500/10"
+                  : "bg-gray-900/50 border-gray-800 hover:border-gray-700"
+                  }`}
+              >
+                <CardHeader>
+                  <CardTitle className="flex justify-between items-center">
+                    <span className="text-2xl font-bold">{p.plan}</span>
+                    {p.popular && <span className="text-xs font-semibold bg-blue-500 text-white px-3 py-1 rounded-full">POPULAR</span>}
+                  </CardTitle>
+                </CardHeader>
+                <CardContent className="flex flex-col flex-grow">
+                  <div className="text-4xl font-extrabold mb-4">{p.price}</div>
+                  <ul className="space-y-3 mb-8 text-gray-400 flex-grow">
+                    {p.features.map((f, j) => (
+                      <li key={j} className="flex items-center gap-3">
+                        <span className="w-5 h-5 bg-blue-500/20 text-blue-400 rounded-full flex items-center justify-center">✓</span>
+                        {f}
+                      </li>
+                    ))}
+                  </ul>
+                  <Button
+                    className={`w-full text-lg py-6 font-bold transition-transform duration-300 hover:scale-105 ${p.popular
+                      ? "bg-blue-500 hover:bg-blue-600 text-white"
+                      : "bg-gray-700 hover:bg-gray-600"
+                      }`}
+                    onClick={() => navigate("/login")}
+                  >
+                    Choose Plan
+                  </Button>
+                </CardContent>
+              </Card>
+            </motion.div>
+          ))}
         </div>
-        <div className="text-center text-xs mt-8 border-t border-gray-700 pt-4">
-          &copy; {new Date().getFullYear()} BarberBook. All rights reserved.
+      </section>
+
+      {/* ======================= */}
+      {/* FAQ SECTION        */}
+      {/* ======================= */}
+      <section className="py-20 px-6 md:px-16">
+        <motion.h2 {...fadeIn()} className="text-3xl md:text-4xl font-bold text-center mb-12">
+          Your Questions, Answered
+        </motion.h2>
+        <motion.div {...fadeIn()} className="max-w-3xl mx-auto">
+          <Accordion type="single" collapsible className="w-full">
+            {FAQS.map((faq, i) => (
+              <AccordionItem key={i} value={`item-${i}`} className="border-b border-gray-800">
+                <AccordionTrigger className="py-4 text-left text-lg hover:no-underline hover:text-blue-400">
+                  {faq.q}
+                </AccordionTrigger>
+                <AccordionContent className="text-gray-400 text-base pb-4">
+                  {faq.a}
+                </AccordionContent>
+              </AccordionItem>
+            ))}
+          </Accordion>
+        </motion.div>
+      </section>
+
+      {/* ======================= */}
+      {/* FOOTER SECTION     */}
+      {/* ======================= */}
+      <footer className="py-12 px-6 md:px-16 bg-[#111111] border-t border-gray-800">
+        <div className="max-w-7xl mx-auto flex flex-col md:flex-row justify-between items-center gap-8">
+          <div className="text-center md:text-left">
+            <h3 className="font-bold text-xl mb-1">BarberBook</h3>
+            <p className="text-sm text-gray-500">© {new Date().getFullYear()} All rights reserved.</p>
+          </div>
+          <div className="flex gap-4">
+            <a href="#" className="text-gray-500 hover:text-blue-400 transition-colors"><Twitter /></a>
+            <a href="#" className="text-gray-500 hover:text-blue-400 transition-colors"><Instagram /></a>
+            <a href="#" className="text-gray-500 hover:text-blue-400 transition-colors"><Facebook /></a>
+          </div>
         </div>
       </footer>
     </div>

@@ -3,6 +3,7 @@
 
 body::-webkit-scrollbar {
   display: none; /* Hides the scrollbar */
+  background-color: black;
 }
 
 @custom-variant dark (&:is(.dark *));
