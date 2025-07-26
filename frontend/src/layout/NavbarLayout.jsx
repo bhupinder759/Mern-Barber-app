@@ -2,7 +2,6 @@ import Navbar from "@/components/Navbar";
 import MobileBottomNav from "@/components/MobileBottomNav";
 import { Outlet } from "react-router-dom";
 import { Toaster } from "sonner";
-import { useSelector } from "react-redux";
 
 const NavbarLayout = () => {
   // const { user } = useSelector((state) => state.user);
@@ -15,7 +14,7 @@ const NavbarLayout = () => {
         <Outlet />
       </main>
       <Toaster position="top-right" richColors />
-      <MobileBottomNav />
+      {/* <MobileBottomNav /> */}
     </>
   );
 };

@@ -73,11 +73,11 @@ export default function EnhancedLandingPage() {
   const navigate = useNavigate();
 
   return (
-    <div className="min-h-screen bg-[#0a0a0a] text-gray-200 w-full flex flex-col overflow-x-hidden">
+    <div className="min-h-screen absolute top-0 bg-[#0a0a0a] text-gray-200 w-full flex flex-col overflow-x-hidden">
       {/* ======================= */}
       {/* HERO SECTION       */}
       {/* ======================= */}
-      <section className="relative flex flex-col md:flex-row items-center justify-between py-24 md:py-32 px-6 md:px-16">
+      <section className="relative flex flex-col md:flex-row items-center justify-between mt-20 py-24 md:py-32 px-6 md:px-16">
         <div className="absolute inset-0 bg-grid-white/[0.05] [mask-image:linear-gradient(to_bottom,white_50%,transparent_100%)]"></div>
         {/* Left: Content */}
         <motion.div
@@ -213,12 +213,12 @@ export default function EnhancedLandingPage() {
               >
                 <CardHeader>
                   <CardTitle className="flex justify-between items-center">
-                    <span className="text-2xl font-bold">{p.plan}</span>
+                    <span className="text-2xl text-green-400 font-bold">{p.plan}</span>
                     {p.popular && <span className="text-xs font-semibold bg-blue-500 text-white px-3 py-1 rounded-full">POPULAR</span>}
                   </CardTitle>
                 </CardHeader>
                 <CardContent className="flex flex-col flex-grow">
-                  <div className="text-4xl font-extrabold mb-4">{p.price}</div>
+                  <div className="text-4xl text-white font-extrabold mb-4">{p.price}</div>
                   <ul className="space-y-3 mb-8 text-gray-400 flex-grow">
                     {p.features.map((f, j) => (
                       <li key={j} className="flex items-center gap-3">
