@@ -89,3 +89,27 @@ exports.loginUser = async (req, res) => {
 exports.logoutUser = (req, res) => {
   res.clearCookie("token").json({ message: "Logout successful" });
 };
+
+exports.updateBarberProfile = async (req, res) => {
+  try {
+    const userId = req.user._id; // From verifyJWT middleware
+    const { shopName, profileImage } = req.body;
+
+    const user = await User.findByIdAndUpdate(
+      userId,
+      {
+        shopName,
+        profileImage,
+      },
+      { new: true }
+    );
+
+    res.json({
+      success: true,
+      message: 'Barber profile updated successfully',
+      user,
+    });
+  } catch (error) {
+    res.status(500).json({ success: false, message: 'Error updating profile', error });
+  }
+};

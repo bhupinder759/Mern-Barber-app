@@ -1,12 +1,13 @@
 const express = require('express');
 const router = express.Router();
-const { registerUser, loginUser, logoutUser } = require('../controllers/authController');
-const { protect } = require('../middlewares/authMiddleware');
+const { registerUser, loginUser, logoutUser, updateBarberProfile } = require('../controllers/authController');
+const { protect, authorizeRoles } = require('../middlewares/authMiddleware');
 const  User  = require('../models/User')
 
 router.post('/register', registerUser);
 router.post('/login', loginUser);
 router.post('/logout', logoutUser);
+router.put('/update-profile', protect, authorizeRoles('admin'), updateBarberProfile);
 
 router.get("/me", protect, async (req, res) => {
   try {
