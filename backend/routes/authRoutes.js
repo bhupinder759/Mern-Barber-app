@@ -7,7 +7,7 @@ const  User  = require('../models/User')
 router.post('/register', registerUser);
 router.post('/login', loginUser);
 router.post('/logout', logoutUser);
-router.put('/update-profile', protect, authorizeRoles('admin'), updateBarberProfile);
+router.post('/update-profile', protect, authorizeRoles('admin'), updateBarberProfile);
 
 router.get("/me", protect, async (req, res) => {
   try {

@@ -70,7 +70,6 @@ export default function CreateSlot() {
     },
   });
 
-  toast("Create a new slot below")
 
   const onSubmit = async (data) => {
     try {

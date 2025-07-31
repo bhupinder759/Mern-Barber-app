@@ -17,6 +17,7 @@ import MySlotsPage from './pages/admin/MySlotsPage';
 import AdminBookingsPage from './pages/admin/AdminBookingsPage';
 import GlobalLoader from './pages/GlobalLoader';
 import { toast } from 'sonner';
+import BarberProfile from './pages/admin/BarberProfile';
 
 const App = () => {
   const { user, isloading } = useSelector((state) => state.user);
@@ -71,6 +72,7 @@ const App = () => {
               <Route path="create-slot" element={<CreateSlotPage />} />
               <Route path="slots" element={<MySlotsPage />} />
               <Route path="bookings" element={<AdminBookingsPage />} />
+              <Route path="barber-profile" element={<BarberProfile />} />
             </Route>
         </Route>
 

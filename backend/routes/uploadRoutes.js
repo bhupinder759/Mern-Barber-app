@@ -1,7 +1,8 @@
 const express = require('express');
-const router = express.Router();
 const { imageUpload } = require('../controllers/uploadController')
 const { upload } = require('../middlewares/uploadMiddleware')
+
+const router = express.Router();
 
 router.post('/upload-image', upload.single('my_file'), imageUpload);
 

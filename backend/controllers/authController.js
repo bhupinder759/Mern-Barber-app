@@ -114,26 +114,44 @@ exports.updateBarberProfile = async (req, res) => {
   }
 };
 
+// controller/authController.js
+
+// Assuming User model is imported here, e.g.:
+// const User = require('../models/User'); 
+
 exports.updateBarberProfile = async (req, res) => {
   try {
-    const userId = req.user._id; // From verifyJWT middleware
-    const { shopName, profileImage } = req.body;
+    const userId = req.user.id; // From verifyJWT middleware (assuming protect middleware sets req.user)
+    // Destructure shopName, barberName, and profileImage from the request body
+    const { shopName, barberName, profileImage } = req.body; 
 
-    const user = await User.findByIdAndUpdate(
-      userId,
-      {
-        shopName,
-        profileImage,
-      },
-      { new: true }
-    );
+    // Validate required fields
+    if (!shopName || !barberName || !profileImage) {
+      return res.status(400).json({ success: false, message: 'Shop name, barber name, and profile image are required' });
+    }
+
+    // Find the user by ID
+    const user = await User.findById(userId);
+    if (!user) {
+      return res.status(404).json({ success: false, message: 'User not found' });
+    }
+
+    // Update user properties
+    user.shopName = shopName;
+    user.barberName = barberName; // Added: Update barberName
+    user.profileImage = profileImage;
+    
+    // Save the updated user document
+    await user.save();
 
     res.json({
       success: true,
       message: 'Barber profile updated successfully',
-      user,
+      user, // Return the updated user object
     });
+    
   } catch (error) {
+    console.error("Error updating profile:", error);
     res.status(500).json({ success: false, message: 'Error updating profile', error });
   }
 };
