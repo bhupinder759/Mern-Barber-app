@@ -1,0 +1,36 @@
+name: Deploy Frontend to vercel
+
+on: 
+  push:
+    branches: [ master ]
+    paths:
+      - 'frontend/**'
+
+jobs:
+  build-deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v3
+
+      - name: Install Node.js
+        uses: actions/setup-node@v3
+        with: 
+          node-version: 22
+
+      - name: Install Dependencies
+        run: |
+          cd frontend
+          npm install
+
+      - name: Build React App
+        run: |
+          cd frontend
+          npm run build
+          
+      - name: Deploy to Vercel
+        run: | 
+          npm install -g vercel
+          cd frontend
+          vercel --prod --token=${{ secrets.VERCEL_TOKEN }}
