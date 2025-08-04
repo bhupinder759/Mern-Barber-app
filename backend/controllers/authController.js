@@ -144,6 +144,8 @@ exports.updateBarberProfile = async (req, res) => {
     // Save the updated user document
     await user.save();
 
+    console.log("Barber profile updated successfully:");
+
     res.json({
       success: true,
       message: 'Barber profile updated successfully',
